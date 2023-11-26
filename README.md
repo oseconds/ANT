@@ -4,7 +4,7 @@
 
 ## 저널링 슬라이드
 
-[오영서_기말프로젝트](https://docs.google.com/presentation/d/1tHYqxrmMxCJi4WolTrAYjIlzXc_LJ0rmFNPloDS_ewE/edit?usp=sharing)
+[오영서_개미](https://docs.google.com/presentation/d/1tHYqxrmMxCJi4WolTrAYjIlzXc_LJ0rmFNPloDS_ewE/edit?usp=sharing)
 
 ---
 

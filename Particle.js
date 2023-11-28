@@ -1,10 +1,16 @@
 class Particle {
-  constructor(position, velocity = createVector(random(-1, 1), random(-1, 0))) {
+  constructor(history, velocity = createVector(random(-1, 1), random(-1, 0))) {
     this.acceleration = createVector(0, 0);
     this.velocity = velocity;
-    this.position = position.copy();
     this.lifespan = 255;
     this.w = random(1, 10);
+
+    this.history = history.slice();
+    if (this.history.length > 0) {
+      this.position = this.history[this.history.length - 1].copy();
+    } else {
+      this.position = createVector(0, 0)
+    }
   }
 
   run() {
@@ -19,9 +25,16 @@ class Particle {
   update() {
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
-    this.lifespan -= 1;
-    
-    this.acceleration = createVector(0, 0);
+    this.acceleration.mult(0);
+    this.lifespan -= 0.1;
+  
+    this.history.push(this.position.copy());
+    if (this.history.length > 100) {
+      this.history.splice(0, 1);
+    }
+
+    this.velocity.add(createVector(random(-1, 1), random(-1, 1)));
+
   }
 
   display() {

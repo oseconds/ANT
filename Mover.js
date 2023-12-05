@@ -1,38 +1,31 @@
 class Mover {
-    constructor(interval,v, s, isFirst = false) {
+    constructor(interval, v, s, isFirst, firstMover, index) { // Add isFirst, firstMover, and index parameters
         this.x = mouseX;
         this.y = mouseY;
-        this.xl = random(width);
-        this.yl = random(height);
-        // this.rate = interval;
         this.interval = interval;
         this.speed = s;
-        this.connections = [];
-        this.isFirst = isFirst;
         this.v = v;
-        this.xlHistory = [this.xl];
-        this.ylHistory = [this.yl];
-    }
+    
+        this.isFirst = isFirst;
+        this.firstMover = firstMover;
+        this.index = index; // Add this line
+    
+        this.targetHistory = [];
+      }
 
 
-    update() {
-        if (this.isFirst) {
-            if (frameCount % this.interval === 0) {
-                this.xlHistory.unshift(this.xl);
-                this.ylHistory.unshift(this.yl);
-                this.xl = this.x + random(-v, v);
-                this.yl = this.y + random(-v, v);
-            }
-        } else if (this.connections.length > 0 && this.xlHistory.length > 1) {
-            this.xl = this.xlHistory.pop();
-            this.yl = this.ylHistory.pop();
+      update() {
+        if (this.isFirst && frameCount % this.interval === 0) {
+          this.xl = this.x + random(-this.v, this.v);
+          this.yl = this.y + random(-this.v, this.v);
+          this.targetHistory.unshift({ x: this.xl, y: this.yl }); // Use this.targetHistory instead of this.firstMover.targetHistory
+        } else if (this.firstMover && this.firstMover.targetHistory.length > this.index) {
+          let target = this.firstMover.targetHistory[this.index];
+          this.xl = target.x;
+          this.yl = target.y;
         }
-
-        this.x = lerp(this.x, this.xl, this.speed);
-        this.y = lerp(this.y, this.yl, this.speed);
-
-        this.checkEdges();
-    }
+        // ...
+      }
 
     checkEdges() {
         if (this.x > width) {

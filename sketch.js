@@ -45,18 +45,19 @@ function draw() {
 
 }
 
-function mouseClicked(){
-  
+function mouseClicked() {
   let isFirst = movers.length === 0;
-  let newMover = new Mover(360,3,0.1, isFirst);
-  movers.push(newMover);
+  let firstMover = null;
 
-  if (movers.length > limit){
-    movers.shift();
+  if (!isFirst) {
+    firstMover = movers[0];
   }
 
-  if (movers.length > 1) {
-    let previousMover = movers[movers.length - 2];
-    newMover.addConnection(previousMover);
+  let index = movers.length; // Add this line
+  let newMover = new Mover(360, 3, 0.1, isFirst, firstMover, index); // Modify this line
+  movers.push(newMover);
+
+  if (movers.length > limit) {
+    movers.shift();
   }
 }

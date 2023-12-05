@@ -1,33 +1,32 @@
 class Mover {
-    constructor(r,v, s, isFirst = false) {
+    constructor(interval,v, s, isFirst = false) {
         this.x = mouseX;
         this.y = mouseY;
         this.xl = random(width);
         this.yl = random(height);
-        this.rate = r;
+        // this.rate = interval;
+        this.interval = interval;
         this.speed = s;
         this.connections = [];
         this.isFirst = isFirst;
         this.v = v;
-        this.previousXl = this.x;
-        this.previousYl = this.y;
+        this.xlHistory = [this.xl];
+        this.ylHistory = [this.yl];
     }
 
 
     update() {
         if (this.isFirst) {
-            if (frameCount % this.rate === 0) {
-                this.previousXl = this.xl;
-                this.previousYl = this.yl;
+            if (frameCount % this.interval === 0) {
+                this.xlHistory.unshift(this.xl);
+                this.ylHistory.unshift(this.yl);
                 this.xl = this.x + random(-v, v);
                 this.yl = this.y + random(-v, v);
             }
-        } else if (this.connections.length > 0) {
-            let previousMover = this.connections[0];
-            this.xl = previousMover.previousXl;
-            this.yl = previousMover.previousYl;
+        } else if (this.connections.length > 0 && this.xlHistory.length > 1) {
+            this.xl = this.xlHistory.pop();
+            this.yl = this.ylHistory.pop();
         }
-
 
         this.x = lerp(this.x, this.xl, this.speed);
         this.y = lerp(this.y, this.yl, this.speed);
@@ -56,8 +55,8 @@ class Mover {
 
     addConnection(otherMover) {
         this.connections.unshift(otherMover);
-        this.previousXl = otherMover.previousXl;
-        this.previousYl = otherMover.previousYl;
+        this.xlHistory = [...otherMover.xlHistory];
+        this.ylHistory = [...otherMover.ylHistory];
     }
 
     drawConnection(otherMover) {
@@ -76,5 +75,9 @@ class Mover {
         stroke(255, 180, 50, 255);
         point(this.x, this.y);
 
+    }
+
+    setInterval(interval) {
+        this.interval = interval;
     }
 }

@@ -32,14 +32,17 @@ function draw() {
 
   for (let i = 0; i < movers.length; i++) {
     movers[i].setInterval(gui.getRangeValue('interval'));
-    movers[i].update();
+    if (i === 0) {
+      movers[i].update();
+    } else {
+      movers[i].follow(movers[0]);
+    }
 
     if (i > 0) {
       movers[i].drawConnection(movers[i - 1]);
     }
 
     movers[i].draw();
-
   }
 
 

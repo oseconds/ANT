@@ -5,6 +5,7 @@ class Mover {
         this.interval = interval;
         this.speed = s;
         this.v = v;
+<<<<<<< Updated upstream
     
         this.isFirst = isFirst;
         this.firstMover = firstMover;
@@ -12,6 +13,12 @@ class Mover {
     
         this.targetHistory = [];
       }
+=======
+        this.xlHistory = [this.xl];
+        this.ylHistory = [this.yl];
+        this.historyIndex = 0;
+    }
+>>>>>>> Stashed changes
 
 
       update() {
@@ -73,4 +80,12 @@ class Mover {
     setInterval(interval) {
         this.interval = interval;
     }
+
+    follow(leader) {
+        if (this.historyIndex < leader.xlHistory.length) {
+            this.xl = leader.xlHistory[this.historyIndex];
+            this.yl = leader.ylHistory[this.historyIndex];
+            this.historyIndex++;
+        }
+    }   
 }

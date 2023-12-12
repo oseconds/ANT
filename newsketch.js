@@ -8,51 +8,75 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     background(0, 255);
     ant = new Ant();
-    }
+}
 
 function draw() {
-    background(0, 255);
-    for(let i = 0; i < target.length; i++){
-        ants[i].update(press[].x, press[].y);
+    background(255, 255);
+    for (let i = 0; i < ants.length; i++) {
+        ants[i].update();
         ants[i].draw();
     }
 }
 
-function mousePressed(){
-    target.push(press[length-1]);
+function mousePressed() {
     let cv = createVector(mouseX, mouseY);
     press.push(cv);
-    ants.push(new Ant());
-    // console.log(target[target.length-1]);
+    ants.push(new Ant(press.length - 1));
 }
 
 class Ant {
-    constructor(){
+    constructor(index) {
         // this.x = x;
         // this.y = y;
-        this.locX = random(windowWidth);
-        this.locY = random(windowHeight);
+        this.locX = 0;
+        this.locY = 0;
         this.velX = random(windowWidth);
         this.velY = random(windowHeight);
-        this.speed = 15;
+        this.speed = 1;
+
+        this.index = index;
+        this.currentTargetIndex = 0;
     }
 
-    update(x, y) {
-        let magX = x-this.locX;
-        let magY = y-this.locY;
+    update() {
+            let target;
+            if (this.index === 0) {
+                target = press[press.length - 1];
+            } else if (this.currentTargetIndex < press.length) {
+                target = press[this.currentTargetIndex];
+            }
+    
+            if (target) {
+                let magX = target.x - this.locX;
+                let magY = target.y - this.locY;
+    
+                let mag = Math.sqrt(magX * magX + magY * magY);
+                let norX = magX / mag; 
+                let norY = magY / mag;
 
-        let norX = magX / windowWidth; 
-        let norY = magY / windowHeight;
+                let adjustedSpeed = this.speed * Math.min(1, mag / 100);
+    
 
-        this.velX = norX * this.speed;
-        this.velY = norY * this.speed;
+                this.velX = norX * adjustedSpeed;
+                this.velY = norY * adjustedSpeed;
 
-        this.locX += this.velX;
-        this.locY += this.velY;
+                if (Math.random() < 0.000001)
+                this.velX += (Math.random() - 0.5) * 1;
+                this.velY += (Math.random() - 0.5) * 1;
+        
+                this.locX += this.velX;
+                this.locY += this.velY;
+    
+                // If the Ant has reached the target, increase the currentTargetIndex to move to the next target
+                if (dist(this.locX, this.locY, target.x, target.y) < 15) {
+                    this.currentTargetIndex++;
+                }
+            }
+        
     }
 
     draw() {
-        fill(255);
+        fill(0);
         ellipse(this.locX, this.locY, 10, 10);
     }
 }

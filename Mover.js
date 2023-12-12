@@ -1,7 +1,7 @@
 class Mover {
-    constructor(r,v, s, isFirst = false) {
-        this.x = mouseX;
-        this.y = mouseY;
+    constructor(r,v, s, isFirst = false, x, y) {
+        this.x = x;
+        this.y = y;
         this.xl = random(width);
         this.yl = random(height);
         this.rate = r;

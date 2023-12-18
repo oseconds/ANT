@@ -3,11 +3,15 @@ let ants = [];
 let press = [];
 let target = [];
 
+let gui;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     background(0, 255);
     ant = new Ant();
+
+    gui = QuickSettings.create(10, 10, 'My GUI');
+    gui.addRange('speed', 0, 5, ant.speed, 0.1); 
 
     setInterval(() => {
         let cv = createVector(random(windowWidth), random(windowHeight));
@@ -24,16 +28,8 @@ function draw() {
     }
 }
 
-// function mousePressed() {
-//     let cv = createVector(mouseX, mouseY);
-//     press.push(cv);
-//     ants.push(new Ant(press.length - 1));
-// }
-
 class Ant {
     constructor(index) {
-        // this.x = x;
-        // this.y = y;
         this.locX = 0;
         this.locY = 0;
         this.velX = random(windowWidth);
@@ -46,6 +42,9 @@ class Ant {
     }
 
     update() {
+
+        this.speed = gui.getRangeValue('speed');
+        
         let target;
         if (this.currentTargetIndex < press.length) {
             target = press[this.currentTargetIndex];

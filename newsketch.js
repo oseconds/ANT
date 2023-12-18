@@ -5,6 +5,8 @@ let target = [];
 
 let gui;
 
+let inkPens = [];
+
 defaultSpeed = 1;
 
 function setup() {
@@ -25,14 +27,22 @@ function setup() {
 
 function draw() {
     background(255, 255);
+
+    for (let i = 0; i < inkPens.length; i++) {
+        inkPens[i].display();
+    }
+
     for (let i = 0; i < ants.length; i++) {
         ants[i].update();
         ants[i].draw();
     }
 }
 
+function mouseDragged() {
+    inkPens.push(new InkPen(mouseX, mouseY));
+}
+
 function resetValues() {
     gui.setRangeValue('speed', defaultSpeed); 
 }
-
 

@@ -11,9 +11,31 @@ class Ant {
 
     }
 
+    applyForce(force) {
+        this.velX += force.x;
+        this.velY += force.y;
+    }
+
+    follow(ant) {
+        let targetX = ant.locX;
+        let targetY = ant.locY;
+
+        let dx = targetX - this.locX;
+        let dy = targetY - this.locY;
+
+        if (dx*dx + dy*dy < 100*100) {
+            this.velX += dx * 0.01;
+            this.velY += dy * 0.01;
+        }
+    }
+
     update() {
 
         this.speed = gui.getRangeValue('speed');
+
+        if (this.index > 0) {
+            this.follow(ants[this.index - 1]);
+        }
 
         let target;
         if (this.currentTargetIndex < press.length) {
@@ -51,6 +73,22 @@ class Ant {
             }
         }
 
+
+
+        for (let i = 0; i < inkPens.length; i++) {
+            let dx = this.locX - inkPens[i].x;
+            let dy = this.locY - inkPens[i].y;
+    
+            if (dx*dx + dy*dy < 100*10) {
+
+                this.currentTargetIndex++;
+                if (this.currentTargetIndex >= press.length) {
+                    this.currentTargetIndex = 0; // Loop back to the first target if we've reached the end
+                }
+                break;
+            }
+        }
+    
     }
 
     draw() {

@@ -1,36 +1,47 @@
-let gravity;
-let particles = [];
-
-let firstParticleHistory = [];
-let firstParticleVelocity = createVector(0, 0);
+let movers = [];
+let limit = 10;
+let r = 300;
+let bs = 30;
+let ss = 20;
+let v = 300;
 
 
 function setup() {
-  createCanvas(500, 1300);
-  gravity = createVector(0, 0.05);
-}
+  createCanvas(windowWidth, windowHeight);
+  background(0,255);
 
+  // for (let i = 0; i < limit; i++){
+  //   movers.push(new Mover(0.005,0.01));
+  // }
+
+}
 
 function draw() {
-  background(220);
+  background(0,255);
 
+  for (let i = 0; i < movers.length; i++) {
+    movers[i].update();
 
-  if (particles.length > 0) {
-    let newParticle = new Particle(particles[0].history.slice(), particles[0].velocity.copy());
-    particles.push(newParticle);
-  }
-
-  for (let i = 0; i < particles.length; i++) {
-    particles[i].update();
-    particles[i].display();
-
-    if (particles[i].isDead()) {
-      particles.splice(i, 1);
+    if (i > 0) {
+      movers[i].drawConnection(movers[i - 1]);
     }
+
+    movers[i].draw();
   }
 }
 
-function mouseClicked() {
-  let p = new Particle([createVector(mouseX, mouseY)], createVector(0, 0));
-  particles.push(p);
+function mouseClicked(){
+  
+  let isFirst = movers.length === 0;
+  let newMover = new Mover(60,3,0.1, isFirst);
+  movers.push(newMover);
+
+  if (movers.length > limit){
+    movers.shift();
+  }
+
+  if (movers.length > 1) {
+    let previousMover = movers[movers.length - 2];
+    newMover.addConnection(previousMover);
+  }
 }

@@ -1,6 +1,6 @@
 class Particle {
-  constructor(history, velocity = createVector(random(-1, 1), random(-1, 0))) {
-    this.acceleration = createVector(0, 0);
+  constructor(history, velocity = createVector(1, 1), acceleration = createVector(0, 0)) {
+    this.acceleration = acceleration;
     this.velocity = velocity;
     this.lifespan = 255;
     this.w = random(1, 10);
@@ -24,17 +24,25 @@ class Particle {
 
   update() {
     this.velocity.add(this.acceleration);
-    this.position.add(this.velocity);
     this.acceleration.mult(0);
     this.lifespan -= 0.1;
-  
+
+    // If this is the first particle, update its velocity randomly
+    if (this.isFirst) {
+      this.velocity.add(createVector(random(-1, 1), random(-1, 1)));
+    } 
+
+    this.position.add(this.velocity);
     this.history.push(this.position.copy());
+
+    // For other particles, follow the first particle's position with a delay
+    if (!this.isFirst && particles[0].history.length > 10) {
+      this.position = particles[0].history[particles[0].history.length - 10].copy();
+    }
+
     if (this.history.length > 100) {
       this.history.splice(0, 1);
     }
-
-    this.velocity.add(createVector(random(-1, 1), random(-1, 1)));
-
   }
 
   display() {

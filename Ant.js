@@ -11,9 +11,31 @@ class Ant {
 
     }
 
+    applyForce(force) {
+        this.velX += force.x;
+        this.velY += force.y;
+    }
+
+    follow(ant) {
+        let targetX = ant.locX;
+        let targetY = ant.locY;
+
+        let dx = targetX - this.locX;
+        let dy = targetY - this.locY;
+
+        if (dx*dx + dy*dy < 100*100) {
+            this.velX += dx * 0.01;
+            this.velY += dy * 0.01;
+        }
+    }
+
     update() {
 
         this.speed = gui.getRangeValue('speed');
+
+        if (this.index > 0) {
+            this.follow(ants[this.index - 1]);
+        }
 
         let target;
         if (this.currentTargetIndex < press.length) {
@@ -41,14 +63,31 @@ class Ant {
 
 
             }
+            
 
+            let prevLocX = this.locX;
+            let prevLocY = this.locY;
+        
             this.locX += this.velX;
             this.locY += this.velY;
-
-
-            if (dist(this.locX, this.locY, target.x, target.y) < 10) {
-                this.currentTargetIndex++;
-            }
+        
+            for (let i = 0; i < inkPens.length; i++) {
+                let dx = this.locX - inkPens[i].x;
+                let dy = this.locY - inkPens[i].y;
+        
+                if (dx*dx + dy*dy < 10*10) {
+                    this.locX = prevLocX;
+                    this.locY = prevLocY;
+        
+                    // Change the velocity randomly
+                    this.velX = (Math.random() - 0.5) * 2;
+                    this.velY = (Math.random() - 0.5) * 2;
+                    break;
+                }
+            
+        
+        
+        }
         }
 
     }

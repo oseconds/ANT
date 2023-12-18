@@ -73,28 +73,22 @@ class Ant {
             }
         }
 
-        
-        let prevLocX = this.locX;
-        let prevLocY = this.locY;
-    
-        this.locX += this.velX;
-        this.locY += this.velY;
-    
+
+
         for (let i = 0; i < inkPens.length; i++) {
             let dx = this.locX - inkPens[i].x;
             let dy = this.locY - inkPens[i].y;
     
-            if (dx*dx + dy*dy < 10*10) {
-                this.locX = prevLocX;
-                this.locY = prevLocY;
-    
-                // Change the velocity to move away from the InkPen
-                this.velX = dx;
-                this.velY = dy;
+            if (dx*dx + dy*dy < 100*10) {
+
+                this.currentTargetIndex++;
+                if (this.currentTargetIndex >= press.length) {
+                    this.currentTargetIndex = 0; // Loop back to the first target if we've reached the end
+                }
                 break;
             }
         }
-
+    
     }
 
     draw() {
